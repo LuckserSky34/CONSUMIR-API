@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 
-import { FormBuilder,FormGroup,Validators} from '@angular/forms';
+import { FormBuilder,FormGroup,Validators, FormControl, AbstractControl, ValidationErrors} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -52,13 +52,13 @@ export class DialogAddEditComponent implements OnInit {
     private _empleadoService:EmpleadoService,
     @Inject (MAT_DIALOG_DATA) public dataEmpleado: Empleado
   ) {
-
+    
     this.formEmpleado = this.fb.group({
-      nombres:['',Validators.required],
-      apellidos:['',Validators.required],
+      nombres: ['', [Validators.required,this.soloLetras]],
+      apellidos: ['', [Validators.required,this.soloLetras]],
       idPais:['',Validators.required],
       idDepartamento:['',Validators.required],
-      sueldo:['',Validators.required],
+      sueldo:['', [Validators.required,this.validarSueldo]],
       fechaContrato:['',Validators.required]
     })
 
@@ -79,7 +79,6 @@ export class DialogAddEditComponent implements OnInit {
       duration:3000
     })
   }
-
 
   addEditEmpleado(){
     console.log(this.formEmpleado.value)
@@ -125,6 +124,23 @@ export class DialogAddEditComponent implements OnInit {
     }
   }
 
+  soloLetras(control: FormControl): { [s: string]: boolean } | null {
+    const value: string = control.value;
+    if (/[^a-zA-ZáéíóúÁÉÍÓÚ\s]/.test(value) || value.length > 25) {
+      return { 'invalidInput': true };
+    }
+    return null;
+  }
+  
+  validarSueldo(control: FormControl): { [s: string]: boolean } | null {
+    const value: string = control.value;
+    if (!/^\d{1,7}(\.\d{1,2})?$/.test(value)) {
+      return { 'invalidSueldo': true };
+    }
+    return null;
+  }
+  
+  
   ngOnInit(): void {
   if (this.dataEmpleado) {
     this.formEmpleado.patchValue({
@@ -138,6 +154,7 @@ export class DialogAddEditComponent implements OnInit {
   this.tituloAccion = "Editar";
   this.botonAccion = "Actualizar";
   }
-} 
+}
 
 }
+
