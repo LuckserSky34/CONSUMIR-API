@@ -1,12 +1,9 @@
 import {AfterViewInit, Component, ViewChild, OnInit} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-
 import { Empleado } from './Interfaces/empleado';
 import { EmpleadoService } from './Services/empleado.service';
-
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddEditComponent } from './Dialogs/dialog-add-edit/dialog-add-edit.component';
 import { DialogoDeleteComponent } from './Dialogs/dialogo-delete/dialogo-delete.component';
@@ -27,18 +24,16 @@ export class AppComponent implements AfterViewInit,OnInit {
 
   }
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {
     this.mostrarEmpleados();
   }
 
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
-  
+
   applyFilter(event:Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -50,6 +45,14 @@ export class AppComponent implements AfterViewInit,OnInit {
         console.log(dataResponse)
         this.dataSource.data = dataResponse;
       },error:(e) =>{}
+    })
+  }
+
+  mostrarAlerta(msg:string, accion:string) {
+    this._snackBar.open(msg, accion,{
+      horizontalPosition:"end",
+      verticalPosition:"top",
+      duration:3000
     })
   }
 
@@ -76,14 +79,6 @@ export class AppComponent implements AfterViewInit,OnInit {
     })
   }
 
-  mostrarAlerta(msg:string, accion:string) {
-    this._snackBar.open(msg, accion,{
-      horizontalPosition:"end",
-      verticalPosition:"top",
-      duration:3000
-    })
-  }
-  
   dialogoEliminarEmpleado(dataEmpleado:Empleado){
     this.dialog.open(DialogoDeleteComponent,{
       disableClose:true,
@@ -100,6 +95,5 @@ export class AppComponent implements AfterViewInit,OnInit {
       }
     })
   }
-
 
 }

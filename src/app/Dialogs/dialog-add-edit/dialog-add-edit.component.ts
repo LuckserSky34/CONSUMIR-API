@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 
-import { FormBuilder,FormGroup,Validators, FormControl, AbstractControl, ValidationErrors} from '@angular/forms';
+import { FormBuilder,FormGroup,Validators, FormControl} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -52,7 +52,7 @@ export class DialogAddEditComponent implements OnInit {
     private _empleadoService:EmpleadoService,
     @Inject (MAT_DIALOG_DATA) public dataEmpleado: Empleado
   ) {
-    
+
     this.formEmpleado = this.fb.group({
       nombres: ['', [Validators.required,this.soloLetras]],
       apellidos: ['', [Validators.required,this.soloLetras]],
@@ -81,8 +81,6 @@ export class DialogAddEditComponent implements OnInit {
   }
 
   addEditEmpleado(){
-    console.log(this.formEmpleado.value)
-
     const modelo : Empleado = {
       idEmpleado : 0,
       nombres : this.formEmpleado.value.nombres,
@@ -92,7 +90,6 @@ export class DialogAddEditComponent implements OnInit {
       sueldo : this.formEmpleado.value.sueldo,
       fechaContrato: new Date(this.formEmpleado.value.fechaContrato).toISOString()
     }
-    
     if (this.dataEmpleado == null) {
       this._empleadoService.add(modelo).subscribe({
         next:(data)=>{
@@ -102,7 +99,6 @@ export class DialogAddEditComponent implements OnInit {
           this.mostrarAlerta("No se pudo crear","Error")
         }
       })
-
     } else {
       this._empleadoService.update(this.dataEmpleado.idEmpleado, modelo).subscribe({
         next:(data)=>{
@@ -139,7 +135,6 @@ export class DialogAddEditComponent implements OnInit {
     }
     return null;
   }
-  
   
   ngOnInit(): void {
   if (this.dataEmpleado) {

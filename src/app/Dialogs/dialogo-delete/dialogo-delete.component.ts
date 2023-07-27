@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Empleado } from 'src/app/Interfaces/empleado';
@@ -15,9 +15,6 @@ export class DialogoDeleteComponent {
     @Inject (MAT_DIALOG_DATA) public dataEmpleado: Empleado
   ){}
 
-ngOnInit(): void{
-
-}
 
 confirmar_Eliminar(){
   if (this.dataEmpleado) {
