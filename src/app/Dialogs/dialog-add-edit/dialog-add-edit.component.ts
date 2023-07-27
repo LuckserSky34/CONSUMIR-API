@@ -94,52 +94,50 @@ export class DialogAddEditComponent implements OnInit {
       fechaContrato: new Date(this.formEmpleado.value.fechaContrato).toISOString()
     }
     
-    this._empleadoService.add(modelo).subscribe({
-      next:(data)=>{
-        this.mostrarAlerta("Empleado fue creado","Listo");
-        this.dialogoReferencia.close("creado")
-      },error:(e)=>{
-        this.mostrarAlerta("No se pudo crear","Error")
-      }
-    })
+    if (this.dataEmpleado == null) {
+      this._empleadoService.add(modelo).subscribe({
+        next:(data)=>{
+          this.mostrarAlerta("Empleado fue creado","Listo");
+          this.dialogoReferencia.close("creado")
+        },error:(e)=>{
+          this.mostrarAlerta("No se pudo crear","Error")
+        }
+      })
 
+    } else {
+      this._empleadoService.update(this.dataEmpleado.idEmpleado, modelo).subscribe({
+        next:(data)=>{
+          this.mostrarAlerta("Empleado fue editado","Listo");
+          this.dialogoReferencia.close("editado")
+        },error:(e)=>{
+          this.mostrarAlerta("No se pudo editar","Error")
+        }
+      })
+    }
   }
 
   obtenerDepartamentosPorPais(idPais: number): void {
-  const paisSeleccionado = this.listaPais.find((pais) => pais.idPais == idPais);
-  if (paisSeleccionado) {
-    this.listaDepartamentos = paisSeleccionado.departamentos;
-  } else {
-    this.listaDepartamentos = [];
+    const paisSeleccionado = this.listaPais.find((pais) => pais.idPais ==idPais);
+    if (paisSeleccionado) {
+      this.listaDepartamentos = paisSeleccionado.departamentos;
+    } else {
+      this.listaDepartamentos=[];
+    }
   }
-}
-
-  
-  
 
   ngOnInit(): void {
-    this.selectdPaisId = this.dataEmpleado ? this.dataEmpleado.idPais : 0;
-  
-    this.formEmpleado.get('idPais')?.valueChanges.subscribe((paisId) => {
-      this.obtenerDepartamentosPorPais(paisId);
+  if (this.dataEmpleado) {
+    this.formEmpleado.patchValue({
+      nombres: this.dataEmpleado.nombres,
+      apellidos: this.dataEmpleado.apellidos,
+      idPais: this.dataEmpleado.idPais,
+      idDepartamento: this.dataEmpleado.idDepartamento,
+      sueldo: this.dataEmpleado.sueldo,
+      fechaContrato: moment(this.dataEmpleado.fechaContrato, "DD/MM/YYYY").toDate()
     });
-  
-    if (this.selectdPaisId) {
-      this.obtenerDepartamentosPorPais(this.selectdPaisId);
-    }
-  
-    if (this.dataEmpleado) {
-      this.formEmpleado.patchValue({
-        nombres: this.dataEmpleado.nombres,
-        apellidos: this.dataEmpleado.apellidos,
-        idPais: this.dataEmpleado.idPais,
-        idDepartamento: this.dataEmpleado.idDepartamento,
-        sueldo: this.dataEmpleado.sueldo,
-        fechaContrato: moment(this.dataEmpleado.fechaContrato, "DD/MM/YYYY").toDate()
-      });
-      this.formEmpleado.get('idDepartamento')?.setValue(this.dataEmpleado.idDepartamento)
-    } 
+  this.tituloAccion = "Editar";
+  this.botonAccion = "Actualizar";
   }
-  
+} 
 
 }
