@@ -106,14 +106,14 @@ export class DialogAddEditComponent implements OnInit {
   }
 
   obtenerDepartamentosPorPais(idPais: number): void {
-    const paisSeleccionado = this.listaPais.find((pais) => pais.idPais == idPais);
-    if (paisSeleccionado) {
-      this.listaDepartamentos = paisSeleccionado.departamentos;
-    } else {
-      this.listaDepartamentos = [];
-    }
+  const paisSeleccionado = this.listaPais.find((pais) => pais.idPais == idPais);
+  if (paisSeleccionado) {
+    this.listaDepartamentos = paisSeleccionado.departamentos;
+  } else {
+    this.listaDepartamentos = [];
   }
-  
+}
+
   
   
 
